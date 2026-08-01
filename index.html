@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>T.B BOOSTER — Game Performance & Network Optimizer</title>
+<meta name="description" content="T.B BOOSTER is a free Windows tray app that optimizes network latency, GPU/power priority, and background load for gaming — with honest, no-hype before/after reporting.">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="canonical" href="https://kimteabm-stack.github.io/game-booster/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://kimteabm-stack.github.io/game-booster/">
+<meta property="og:title" content="T.B BOOSTER — Game Performance & Network Optimizer">
+<meta property="og:description" content="Free Windows game booster: low-latency networking, GPU/power optimization, standby memory cleanup, and honest before/after reporting — no exaggerated claims.">
+<meta property="og:image" content="assets/anime_girl_hero_blue.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="T.B BOOSTER — Game Performance & Network Optimizer">
+<meta name="twitter:description" content="Free Windows game booster: low-latency networking, GPU/power optimization, standby memory cleanup, and honest before/after reporting.">
+<meta name="twitter:image" content="assets/anime_girl_hero_blue.png">
+<style>
+  :root {
+    --accent: #3b5bdb;
+    --accent-dark: #2f47b0;
+    --text-dark: #1b1b1f;
+    --text-muted: #6b7280;
+    --bg-soft: #f4f6fb;
+    --card-bg: #ffffff;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', '맑은 고딕', -apple-system, sans-serif;
+    color: var(--text-dark);
+    background: #ffffff;
+    overflow-x: hidden;
+  }
+
+  a { text-decoration: none; color: inherit; }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+
+  /* ---------- Nav ---------- */
+  header {
+    position: sticky;
+    top: 0;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(8px);
+    z-index: 50;
+    border-bottom: 1px solid #eef0f5;
+  }
+
+  nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 32px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+    font-size: 18px;
+    letter-spacing: 0.3px;
+  }
+
+  .logo svg { flex-shrink: 0; }
+
+  .nav-links {
+    display: flex;
+    gap: 40px;
+    font-size: 15px;
+    color: #2b2d33;
+  }
+
+  .nav-links a { transition: color 0.15s ease; }
+  .nav-links a:hover { color: var(--accent); }
+
+  .nav-cta {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+
+  .nav-download {
+    background: var(--accent);
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 14px;
+    white-space: nowrap;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    box-shadow: 0 8px 18px -8px rgba(59, 91, 219, 0.55);
+  }
+  .nav-download:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 20px -8px rgba(59, 91, 219, 0.6);
+  }
+
+  .burger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    padding: 6px;
+  }
+  .burger span {
+    width: 26px;
+    height: 2px;
+    background: var(--accent);
+    border-radius: 2px;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+  }
+  .burger.open span:first-child { transform: translateY(3.5px) rotate(45deg); }
+  .burger.open span:last-child { transform: translateY(-3.5px) rotate(-45deg); }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    position: relative;
+    padding: 90px 32px 120px;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+
+  .hero-copy {
+    flex: 1 1 460px;
+    min-width: 320px;
+    z-index: 2;
+  }
+
+  .hero-copy h1 {
+    font-size: clamp(44px, 6vw, 72px);
+    line-height: 1.05;
+    font-weight: 300;
+    margin: 0 0 4px;
+    color: var(--text-dark);
+  }
+
+  .hero-copy h1 .accent {
+    display: block;
+    font-weight: 800;
+    color: var(--accent);
+    letter-spacing: 1px;
+  }
+
+  .hero-copy p {
+    margin: 28px 0 36px;
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--text-muted);
+    max-width: 460px;
+  }
+
+  .hero-actions {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .smartscreen-note {
+    margin: 16px 0 0;
+    font-size: 12.5px;
+    line-height: 1.6;
+    color: var(--text-muted);
+    max-width: 460px;
+  }
+  .smartscreen-note.light {
+    color: rgba(255, 255, 255, 0.75);
+    max-width: 360px;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+    padding: 16px 34px;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 15px;
+    box-shadow: 0 12px 24px -8px rgba(59, 91, 219, 0.55);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 16px 28px -8px rgba(59, 91, 219, 0.6);
+  }
+
+  .btn-ghost {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--text-dark);
+  }
+
+  .play-circle {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: 1.5px solid var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent);
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  .btn-ghost:hover .play-circle { background: var(--accent); color: #fff; }
+
+  .hero-visual {
+    position: relative;
+    flex: 1 1 480px;
+    min-width: 320px;
+    text-align: center;
+  }
+
+  .hero-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 480px;
+    height: 480px;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle, rgba(59, 91, 219, 0.4), rgba(120, 160, 255, 0.22) 55%, rgba(120, 160, 255, 0) 75%);
+    filter: blur(4px);
+    z-index: 0;
+  }
+
+  .hero-visual img {
+    position: relative;
+    width: 100%;
+    max-width: 420px;
+    display: block;
+    margin: 0 auto;
+    z-index: 1;
+    filter: drop-shadow(0 30px 40px rgba(30, 41, 59, 0.18));
+  }
+
+  .stat-card {
+    position: absolute;
+    left: 8%;
+    bottom: 8%;
+    z-index: 2;
+    background: #fff;
+    border-radius: 22px;
+    box-shadow: 0 30px 60px -20px rgba(30, 41, 59, 0.3);
+    padding: 26px 30px;
+    display: flex;
+    gap: 30px;
+  }
+
+  .stat {
+    text-align: center;
+  }
+
+  .donut {
+    width: 78px;
+    height: 78px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 12px;
+    color: var(--text-dark);
+    margin: 0 auto 10px;
+  }
+
+  .donut.before { background: conic-gradient(var(--accent) 0deg 216deg, #eef0f5 216deg 360deg); }
+  .donut.after { background: conic-gradient(var(--accent) 0deg 252deg, #eef0f5 252deg 360deg); }
+
+  .donut::before {
+    content: '';
+    position: absolute;
+  }
+
+  .donut-inner {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .stat span.label {
+    display: block;
+    font-weight: 700;
+    color: var(--accent);
+    font-size: 14px;
+  }
+
+  /* ---------- Features ---------- */
+  .features {
+    background: var(--bg-soft);
+    padding: 90px 32px;
+  }
+
+  .section-head {
+    text-align: center;
+    max-width: 620px;
+    margin: 0 auto 56px;
+  }
+
+  .section-head h2 {
+    font-size: 34px;
+    margin: 0 0 14px;
+  }
+  .section-head h2 .accent { color: var(--accent); }
+
+  .section-head p {
+    color: var(--text-muted);
+    font-size: 15.5px;
+    line-height: 1.7;
+    margin: 0;
+  }
+
+  .feature-grid {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 24px;
+  }
+
+  .feature-card {
+    background: var(--card-bg);
+    border-radius: 18px;
+    padding: 32px 26px;
+    box-shadow: 0 12px 30px -18px rgba(30, 41, 59, 0.2);
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+  }
+  .feature-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 34px -16px rgba(59, 91, 219, 0.28);
+  }
+
+  .feature-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    background: rgba(59, 91, 219, 0.1);
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    font-size: 22px;
+  }
+
+  .feature-card h3 {
+    margin: 0 0 10px;
+    font-size: 17px;
+  }
+
+  .feature-card p {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 14px;
+    line-height: 1.65;
+  }
+
+  /* ---------- CTA band ---------- */
+  .cta-band {
+    max-width: 1000px;
+    margin: 90px auto;
+    padding: 56px 48px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+    border-radius: 28px;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+    box-shadow: 0 30px 50px -20px rgba(59, 91, 219, 0.45);
+  }
+
+  .cta-band h2 { margin: 0 0 8px; font-size: 26px; }
+  .cta-band p { margin: 0; opacity: 0.85; font-size: 14.5px; }
+
+  .btn-white {
+    background: #fff;
+    color: var(--accent);
+    padding: 15px 30px;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 15px;
+    white-space: nowrap;
+  }
+
+  /* ---------- Footer ---------- */
+  footer {
+    padding: 40px 32px;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 13px;
+  }
+  footer p { margin: 0 0 10px; }
+  footer p:last-child { margin-bottom: 0; }
+  footer a { color: var(--accent); font-weight: 600; }
+  footer a:hover { text-decoration: underline; }
+
+  @media (max-width: 820px) {
+    .nav-links {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      flex-direction: column;
+      gap: 0;
+      background: #fff;
+      border-bottom: 1px solid #eef0f5;
+      padding: 8px 0;
+    }
+    .nav-links.open { display: flex; }
+    .nav-links a { padding: 14px 32px; }
+    .nav-links a:hover { background: var(--bg-soft); }
+    .burger { display: flex; }
+    .nav-download { padding: 9px 16px; font-size: 13px; }
+    .hero { padding-top: 60px; text-align: center; }
+    .hero-copy p { margin-left: auto; margin-right: auto; }
+    .hero-actions { justify-content: center; }
+    .stat-card { position: static; margin-top: 24px; }
+    .hero-visual { justify-content: center; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <nav>
+    <div class="logo">
+      <svg width="22" height="20" viewBox="0 0 22 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M11 0L21.5 19H0.5L11 0Z" fill="#3b5bdb"/>
+      </svg>
+      T.B BOOSTER
+    </div>
+    <div class="nav-links" id="navLinks">
+      <a href="#home">Home</a>
+      <a href="#features">Features</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+    </div>
+    <div class="nav-cta">
+      <a href="downloads/Booster.zip" download class="nav-download">Download</a>
+      <div class="burger" id="burgerBtn"><span></span><span></span></div>
+    </div>
+  </nav>
+</header>
+
+<section class="hero" id="home">
+  <div class="hero-copy">
+    <h1>Computer<span class="accent">BOOSTER</span></h1>
+    <p>
+      No more ping spikes and frame drops mid-game.
+      Low-latency networking, GPU &amp; power priority, background cleanup —
+      all applied at once with a free Windows game booster.
+    </p>
+    <div class="hero-actions">
+      <a href="downloads/Booster.zip" download class="btn-primary">Download Now</a>
+      <a href="#features" class="btn-ghost">
+        <span class="play-circle">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 1L10 6L2 11V1Z" fill="currentColor"/></svg>
+        </span>
+        See How It Works
+      </a>
+    </div>
+    <p class="smartscreen-note">Windows may show a "Windows protected your PC" SmartScreen prompt since the app isn't code-signed yet — click <strong>More info → Run anyway</strong> to continue.</p>
+  </div>
+  <div class="hero-visual">
+    <div class="hero-glow"></div>
+    <img src="assets/anime_girl_hero_blue.png" alt="Booster mascot character">
+    <div class="stat-card">
+      <div class="stat">
+        <div class="donut before"><div class="donut-inner">Normal</div></div>
+        <span class="label">Before</span>
+      </div>
+      <div class="stat">
+        <div class="donut after"><div class="donut-inner">Smooth</div></div>
+        <span class="label">After</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="features" id="features">
+  <div class="section-head">
+    <h2>Game optimization in <span class="accent">one click</span></h2>
+    <p>No complicated settings — just toggle the features you want.</p>
+  </div>
+  <div class="feature-grid">
+    <div class="feature-card">
+      <div class="feature-icon">⚡</div>
+      <h3>Low-Latency Mode</h3>
+      <p>QoS traffic priority, fast DNS, IPv4-first switching — automatically clears out the usual causes of ping spikes mid-game.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🖥</div>
+      <h3>GPU &amp; Power Optimization</h3>
+      <p>Automatically applies GPU high-performance preference and Windows' high-performance power plan to the running game, and restores everything on exit.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🧹</div>
+      <h3>Standby Memory Cleanup</h3>
+      <p>Clears out unnecessarily accumulated standby memory every time you boost, freeing up more memory for your game.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🎮</div>
+      <h3>Automatic Game Detection</h3>
+      <p>Works out of the box with registered games like Roblox, Minecraft, and Elden Ring — or pick any running window to optimize.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🧭</div>
+      <h3>Route Diagnosis</h3>
+      <p>Traces the connection hop by hop to tell you whether a ping spike is your PC or a problem somewhere along the route.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">✅</div>
+      <h3>No-Hype Reporting</h3>
+      <p>If your ping actually got worse, it says so. No "300% faster" style exaggeration.</p>
+    </div>
+  </div>
+</section>
+
+<div class="cta-band">
+  <div>
+    <h2>Try Booster right now</h2>
+    <p>No install needed — unzip and run. Supports Windows 10/11.</p>
+    <p class="smartscreen-note light">SmartScreen prompt on first run? Click <strong>More info → Run anyway</strong> — the app isn't code-signed yet.</p>
+  </div>
+  <a href="downloads/Booster.zip" download class="btn-white">Download</a>
+</div>
+
+<footer id="about">
+  <p id="contact">
+    Questions or bug reports:
+    <a href="mailto:kimteabm@gmail.com">kimteabm@gmail.com</a>
+    ·
+    <a href="https://github.com/kimteabm-stack/game-booster/issues" target="_blank" rel="noopener">GitHub Issues</a>
+  </p>
+  <p>© 2026 T.B BOOSTER. Made for gamers, by a gamer.</p>
+</footer>
+
+
+<script>
+  var burgerBtn = document.getElementById('burgerBtn');
+  var navLinks = document.getElementById('navLinks');
+  burgerBtn.addEventListener('click', function () {
+    burgerBtn.classList.toggle('open');
+    navLinks.classList.toggle('open');
+  });
+  navLinks.querySelectorAll('a').forEach(function (link) {
+    link.addEventListener('click', function () {
+      burgerBtn.classList.remove('open');
+      navLinks.classList.remove('open');
+    });
+  });
+</script>
+</body>
+</html>
