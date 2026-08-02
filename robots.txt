@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://kimteabm-stack.github.io/game-booster-site/sitemap.xml
