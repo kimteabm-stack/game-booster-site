@@ -435,6 +435,24 @@
   footer a { color: var(--accent); font-weight: 600; }
   footer a:hover { text-decoration: underline; }
 
+  .kofi-link {
+    display: inline-block;
+    background: #13C3FF;
+    color: #fff;
+    font-weight: 700;
+    font-size: 13.5px;
+    padding: 10px 22px;
+    border-radius: 999px;
+    margin-bottom: 20px;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    box-shadow: 0 8px 18px -8px rgba(19, 195, 255, 0.55);
+  }
+  .kofi-link:hover {
+    transform: translateY(-1px);
+    text-decoration: none;
+    box-shadow: 0 10px 20px -8px rgba(19, 195, 255, 0.6);
+  }
+
   @media (max-width: 820px) {
     .nav-links {
       display: none;
@@ -568,6 +586,7 @@
 </div>
 
 <footer id="about">
+  <a href="https://ko-fi.com/teabmkim" target="_blank" rel="noopener" class="kofi-link">☕ Support on Ko-fi</a>
   <p id="contact">
     Questions or bug reports:
     <a href="mailto:kimteabm@gmail.com">kimteabm@gmail.com</a>
